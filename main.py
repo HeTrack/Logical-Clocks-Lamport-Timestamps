@@ -2,17 +2,14 @@ from multiprocessing import Process, Pipe
 from os import getpid
 from datetime import datetime
 
-
 # фактическое время на машине, выполняющей процессы.
 def local_time(counter):
     return ' (LAMPORT_TIME={}, LOCAL_TIME={})'.format(counter, datetime.now())
-
 
 # новая отметка времени, когда процесс получает сообщение,
 # Функция берет максимум полученной временной метки и ее локального счетчика и увеличивает ее на единицу.
 def calc_timestamp(receive_time_stamp, counter):
     return max(receive_time_stamp, counter) + 1
-
 
 # возвращать обновленную метку времени для процесса, где происходит событие.
 def event(pid, counter):
@@ -28,13 +25,11 @@ def send_message(pipe, pid, counter):
     print('Message sent from ' + str(pid) + local_time(counter))
     return counter
 
-
 def receive_message(pipe, pid, counter):
     timestamp = pipe.recv()
-    # counter = calc_timestamp(timestamp, counter)
+    counter = calc_timestamp(timestamp, counter)
     print('Message received at ' + str(pid) + local_time(counter))
     return counter
-
 
 # определение процесса
 def process_one(ab, ba):
@@ -45,7 +40,6 @@ def process_one(ab, ba):
     counter = event(pid, counter)
     counter = receive_message(ba, pid, counter)
     counter = event(pid, counter)
-
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
