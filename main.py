@@ -17,7 +17,6 @@ def event(pid, counter):
     print('Something happened in {} !'.format(pid) + local_time(counter))
     return counter
 
-
 # Отправка сообщения. pipe - кортеж из объектов соединений
 def send_message(pipe, pid, counter):
     counter += 1
